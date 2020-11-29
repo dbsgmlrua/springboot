@@ -1,36 +1,37 @@
 package kr.co.fastcampus.eatgo.eatgo.interfaces;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.fastcampus.eatgo.eatgo.domain.MenuItem;
 import kr.co.fastcampus.eatgo.eatgo.domain.Restaurant;
+import kr.co.fastcampus.eatgo.eatgo.domain.RestaurantRepository;
 
 @RestController
 public class RestaurantController {
+    
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     @GetMapping("/restaurants")
     public List<Restaurant> list(){
-        List<Restaurant> retaurants = new ArrayList<>();
+        List<Restaurant> retaurants = restaurantRepository.findAll();
 
-        Restaurant res = new Restaurant(1004L, "Bob zip", "Seoul");
-        retaurants.add(res);
         return retaurants;
     }
 
     @GetMapping("/restaurants/{id}")
     public Restaurant detail(@PathVariable("id") Long id){
 
-        List<Restaurant> retaurants = new ArrayList<>();
+        Restaurant retaurants = restaurantRepository.findByID(id);
 
-        retaurants.add(new Restaurant(1004L, "Bob zip", "Seoul"));
-        retaurants.add(new Restaurant(2020L, "Cyber Food", "Seoul"));
-
-
-        Restaurant res = retaurants.stream().filter(r-> r.getid().equals(id)).findFirst().orElse(null);
-        return res;
+        List<MenuItem> menuItems = menuitemRepository.findAllByRestaurantId(id);
+        retaurants.setMenuItems(menuItems);
+        retaurants.addMenuItem(new MenuItem("Kimchi"));
+        return retaurants;
     }
 }

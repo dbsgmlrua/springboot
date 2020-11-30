@@ -1,7 +1,13 @@
 package com.fastcampus.java.controller;
 
 import com.fastcampus.java.model.SearchParam;
+import com.fastcampus.java.model.entity.User;
+import com.fastcampus.java.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api") // localhost:8080/api
@@ -31,5 +37,21 @@ public class GetController {
 
         // { "account" : "", "email" : "", "page" : 0}
         return searchParam;
+    }
+    @Autowired
+    private UserRepository userRepository;
+    @GetMapping("/getUpdateAcc")
+    public void updatedUseracc(@RequestParam Long id, @RequestParam String acc){
+
+        Optional<User> user = userRepository.findById(id);
+
+        String result = null;
+        user.ifPresent(selectUser ->{
+            selectUser.setAccount(acc);
+            selectUser.setUpdatedAt(LocalDateTime.now());
+            selectUser.setUpdatedBy("update method()");
+
+            userRepository.save(selectUser);
+        });
     }
 }

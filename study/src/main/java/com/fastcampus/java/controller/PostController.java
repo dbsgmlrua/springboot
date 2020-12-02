@@ -10,6 +10,7 @@ import com.fastcampus.java.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -64,7 +65,7 @@ public class PostController {
 
         Item item = new Item();
         item.setName("노트북");
-        item.setPrice(100000);
+        item.setPrice(BigDecimal.valueOf(100000));
         item.setContent("삼성 노트북");
 
         Item newItem = itemRepository.save(item);
